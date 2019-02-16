@@ -1,0 +1,71 @@
+\documentclass[12pt,letterpaper,twoside]{article}
+
+\usepackage{cme212}
+
+\newcommand{\T}[1]{\text{\texttt{#1}}}
+\newcommand{\V}[1]{\text{\textit{#1}}}
+
+\begin{document}
+
+{\centering \textbf{Paper Exercise 3\\ Due Friday, February 23rd, in class \\}}
+\vspace*{-8pt}\noindent\rule{\linewidth}{1pt}
+
+For this exercise you may find it useful to review the content of Lecture 9 on abstraction functions and representation invariants.
+
+\paragraph{(0)} Our graph is undirected, but we could use it to build a
+\emph{directed} graph or \emph{digraph}. A digraph's edges are \emph{ordered}
+pairs of nodes $(n_i, n_j)$, rather than unordered pairs $\{n_i, n_j\}$; all
+operations look like their undirected counterparts and have similar complexity.
+
+Here's one possible, and interesting, digraph representation.
+\begin{cpp}
+template <typename V> 
+class Digraph { 
+  ... 
+ private:
+  Graph<V> g_;
+};
+\end{cpp}
+Explain the representation by giving an abstraction function and representation invariant. Note that \texttt{Digraph} is not \texttt{Graph}'s friend and can only use \texttt{Graph}'s public interface.
+
+
+\paragraph{(1)} The \texttt{vector<T>::resize} operation extends a vector with
+\emph{initialized} elements. (For example, after \texttt{vector<int> v;
+  v.resize(20)}, \texttt{v} contains 20 zeroes.) This is almost always what we
+want, but it can be useful to extend a vector with \emph{uninitialized
+  memory}. Here's an example: uninitialized memory helps build a \emph{sparse
+  vector}, in which elements are initialized only when first referenced. We
+assume a special \texttt{garbage\_vector} type whose \texttt{resize} method does
+not initialize new memory.
+
+\begin{cpp}
+template <typename T> 
+class sparse_vector {
+  garbage_vector<size_t> position_;
+  vector<size_t> check_;
+  vector<T> value_;
+ public:
+  /** Construct a sparse vector with all elements equal to T(). */
+  sparse_vector() {
+  }
+  /** Return a reference to the element at position @a i. */
+  T& operator[](size_t i) {
+    if (i >= position_.size())
+      position_.resize(i + 1);   // Adds uninitialized memory
+    if (position_[i] >= check_.size() || check_[position_[i]] != i) {
+      // This is the first reference to the element at position i
+      position_[i] = check_.size();
+      check_.push_back(i);
+      value_.push_back(T());
+    }
+    return value_[position_[i]];
+  }
+};
+\end{cpp}
+
+An abstract \texttt{sparse\_vector} value is an \textbf{infinite} vector.
+
+Write an abstraction function and representation invariant for
+\texttt{sparse\_vector}.
+
+\end{document}

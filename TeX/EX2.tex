@@ -1,0 +1,59 @@
+\documentclass[12pt,letterpaper,twoside]{article}
+
+\usepackage{cme212}
+
+\begin{document}
+
+{\centering \textbf{Paper Exercise 2\\ Due Friday, February 10th, in class \\}}
+{\centering \textbf{Name: [enter\_name] SUNETID: [enter\_id]} \par}
+\vspace*{-8pt}\noindent\rule{\linewidth}{1pt}
+
+\paragraph{(0)} Write an implementation of {\tt compute\_median} below that computes and returns the median value of an array of {\tt double}s. The implementation should have an average time complexity no worse than $\O(n)$ and are only allowed to use functionality available in the header files {\tt <algorithm>} and {\tt <vector>}. For an even number of values, return the mean of the two middle values. HINT: Find a more general function in {\tt <algorithm>} that you can map this {\tt compute\_median]} onto.
+\begin{cpp}
+#include <algorithm>
+#include <vector>
+
+/** Compute the median of an array of doubles.
+ * @param[in] values  The array of values.
+ * @param[in]      n  The number of values in the array.
+ * @result The median value of the array.
+ *
+ * @pre @a n > 0
+ * @post Let sorted_v be @a values sorted by op<.
+ *         If @a n odd,  result ==  sorted_v[n/2]
+ *         If @a n even, result == (sorted_v[n/2] + sorted_v[n/2-1])/2
+ */
+double compute_median(const double* values, unsigned n)
+\end{cpp}
+
+\paragraph{(1)} An abstract vector $V$ is a sequence of elements $[v_0,
+\dots, v_{n-1}]$. An abstract vector \emph{iterator} refers to a position
+in this sequence; in specifications, we can refer to ``the iterator for position
+$i$'' (for $0\leq i\leq n$).
+
+Most STL containers offer \texttt{insert} and \texttt{erase} methods that take iterators as arguments \emph{and return iterators as results}. For example, \texttt{iterator vector<T>::erase(iterator it)} erases the element at \texttt{it}, shifts later elements down, and returns an iterator pointing at the formerly next element (the element that followed \texttt{it}, which was shifted down one position by \texttt{erase}). Furthermore, it invalidates all iterators in the range \texttt{[it, end())}.
+
+Write a specification for this function. Make sure to define its return value. Since {\tt erase} mutates its container, use syntax like {\tt old end()} and {\tt new end()} to refer to values before and after the call.
+
+\paragraph{(2)} Consider a data type $U$ with abstract type $U = \{u_0,\dots,u_{n-1}\}$, where each $u_i$ is an integer. $U$'s iterator iterates over the values in \emph{any} order. Assume $U$'s representation is a \texttt{std::vector<int> value\_}. Write an implementation of \texttt{U::iterator U::erase(U::iterator it)} that has $O(1)$ time complexity. The specification is not necessary.
+
+\paragraph{(3)} Use such \texttt{erase} methods to write a method with the
+following specification. Never use an invalid iterator---all iterators to a
+\texttt{vector} become invalid after any \texttt{insert} or
+\texttt{erase}---and your method should work for other STL containers, such
+as \texttt{map} and \texttt{list}.
+
+\begin{cpp}
+/** Erase all elements of @a x for which @a pred returns true.
+ * @param[in,out] x Container of elements.
+ * @param[in] pred Predicate that takes an element and returns a bool.
+ *
+ * @post new @a x.size() <= old @a x.size()
+ * @post new @a x contains exactly those elements e of old @a x for 
+ *     which @a pred(e) returned false, and in the same relative order.
+ */
+template <typename Container, typename Predicate>
+void erase_if(Container& x, Predicate pred);
+\end{cpp}
+
+\end{document}

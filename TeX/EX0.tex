@@ -1,0 +1,72 @@
+\documentclass[12pt,letterpaper,twoside]{article}
+
+\usepackage{cme212}
+
+\begin{document}
+
+{\centering \textbf{Paper Exercise 0 -- C Warm-up\\ Due Friday, January 12, in class} \par}
+\vspace*{-8pt}\noindent\rule{\linewidth}{1pt}
+
+\paragraph{(0)} The poor ampersand (\&) and asterisk (*) get used in a lot of different ways in C++. Given the following declaration and initialization for {\tt a}, {\tt b}, and {\tt c}:
+\begin{verbatim}
+int a = 2, b = -3, c = -7;
+\end{verbatim}
+What can you say about the values of the following variables {\tt d} through {\tt h}:
+\begin{compactenum}
+\item[(a)] \texttt{int* d = \&c;}
+\item[(b)] \texttt{int\& e = a;}
+\item[(c)] \texttt{int f = b*c;} 
+\item[(d)] \texttt{int g = *\&a;} 
+\item[(e)] \texttt{int* h = a;}
+\end{compactenum}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\paragraph{(1)} What is the output of the program below? Explain in your own words why.
+\begin{cpp}
+#include <iostream>
+
+int f(int& a, int& b) {
+  a = 3;
+  b = 4;
+  return a + b;
+}
+
+int main() {
+  int a = 1;
+  int b = 2;
+  int c = f(a, a);
+  std::cout << a << b << c << std::endl;
+}
+\end{cpp}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\paragraph{(2)} What is the output of the program below? Explain in your own words why.
+
+\begin{cpp}
+#include <iostream>
+
+struct A
+{
+  A() : val(2) {}
+  A(int v) : val(v+2) { v += 2; }
+  A(A& a) : val(a.val+2) { a.val += 2; } 
+
+  int val;
+};
+
+int main(int argc, char** argv)
+{
+  A a1;
+  A a2(5);
+  A a3(a1.val);
+  A a4 = a3;
+  
+  std::cout << a1.val << a2.val << a3.val << a4.val << std::endl;
+}
+\end{cpp}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\end{document}

@@ -1,0 +1,55 @@
+\documentclass[12pt,letterpaper,twoside]{article}
+
+
+\usepackage{cme212}
+
+\newcommand{\T}[1]{\text{\texttt{#1}}}
+\newcommand{\V}[1]{\text{\textit{#1}}}
+
+\begin{document}
+
+{\centering \textbf{Paper Exercise 4\\ Due Friday, March 9th, in class \\}}
+{\centering \textbf{Name: [enter\_name] SUNETID: [enter\_id]} \par}
+\vspace*{-8pt}\noindent\rule{\linewidth}{1pt}
+
+
+
+\paragraph{(0)} The \texttt{CME212/BoundingBox.hpp} is kind of interesting. The following code will create a bounding box that encloses our entire graph:
+\begin{cpp}
+template <typename V, typename E>
+Box3D graph_bounding_box(const Graph<V,E>& g) {
+  auto first = graph.node_begin();
+  auto last  = graph.node_end();
+  assert(first != last);
+  Box3D box = Box3D((*first).position());
+  for (++first; first != last; ++first)
+    box |= (*first).position();
+  return box;
+}
+\end{cpp}
+Interestingly, \texttt{Box3D} also provides a constructor that takes a range of \texttt{Point}s and performs the above operation for us. So, instead, we could write
+\begin{cpp}
+template <typename V, typename E>
+Box3D graph_bounding_box(const Graph<V,E>& g) {
+  return Box3D(g.node_begin(), g.node_end());
+}
+\end{cpp}
+except that this doesn't work because we're passing it \texttt{Node} iterators instead of \texttt{Point} iterators.
+
+The Boost and Thrust libraries both provide ``fancy iterators'', one of which is the \texttt{transform\_iterator}. See
+
+\href{https://github.com/thrust/thrust/tree/master/thrust/iterator}{https://github.com/thrust/thrust/tree/master/thrust/iterator}
+
+for documentation.
+
+Use \texttt{thrust::transform\_iterator} to correct the above code that uses \texttt{Box3D}'s range constructor.
+
+\paragraph{(1)} In fact, it is possible to implement your \texttt{Graph::node\_iterator} as a \texttt{thrust::transform\_iterator}. That is, we could delete \texttt{NodeIterator} entirely and write
+\begin{verbatim}
+using node_iterator = thrust::transform_iterator<__, __, Node>;
+\end{verbatim}
+The third parameter simply explicitly states that the \texttt{value\_type} should be \texttt{Node}. Fill in the two blanks and explain your answer.
+
+
+
+\end{document}

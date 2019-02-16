@@ -1,0 +1,78 @@
+\documentclass[12pt,letterpaper,twoside]{article}
+
+\usepackage{cme212}
+
+\begin{document}
+
+{\centering \textbf{Paper Exercise 1 -- {\tt lower\_bound}\\ Due Monday, January 29, in class} \par}
+{\centering \textbf{Name: [enter\_name] SUNETID: [enter\_id]} \par}
+\vspace*{-8pt}\noindent\rule{\linewidth}{1pt}
+\vspace{-3em}
+
+\paragraph{(0)} Consider the following specification and implementation for a {\tt lower\_bound} function:
+\begin{cpp}
+/** Find the first element in a sorted array that is not less than a value.
+ * @param[in] a         Sorted array to search.
+ * @param[in] low,high  Search in the index range [@a low, @a high).
+ * @param[in] v         Value to search for.
+ * @return  An index into array @a a or @a high.
+ *
+ * @tparam T Type of the elements. 
+ *   T is comparable with 'bool operator<(T,T)'.
+ *   For all values @a a[i] and @a v, operator< defines a strict weak ordering:
+ *    -- Irreflexive: !operator<(x,x)
+ *    -- Asymmetric:   operator<(x,y) => !operator<(y,x)
+ *    -- Transitive:   operator<(x,y) & operator<(y,z) => operator<(x,z)
+ *
+ * @pre  0 <= @a low <= @a high <= Size of @a a.
+ * @pre  For all i,j with @a low <= i < j < @a high, 
+ *         @a a[i] <= @a a[j].
+ *
+ * @post For all i,j with @a low <= i < result <= j < @a high, 
+ *         @a a[i] < @a v and @a a[j] >= @a v.
+ *
+ * Performs O(log(@a high - @a low)) operations.
+ */
+template <typename T>
+int lower_bound(const T* a, int low, int high, const T& v) {
+   while (low < high) {
+      int mid = low + (high-low) / 2;
+      if (a[mid] < v)
+         low = mid+1;
+      else
+         high = mid; 
+   }
+   return low;
+}
+\end{cpp}
+This specification is not {\em consistent}: it only requires {\tt operator<} but
+uses {\tt <=} and {\tt >=} in its pre- and post-conditions.
+
+More subtly, but also more importantly, it is also not {\em minimal}: there are
+alternative (weaker) preconditions that would allow this {\em same} {\tt
+  lower\_bound} to be used by a {\em wider range of inputs} -- inputs that the
+current specification excludes. (Hint: Does the array have to be sorted? Does
+\texttt{operator<} have to impose a strict weak ordering?).
+
+Provide a more consistent and minimal specification.
+
+\newpage
+
+
+\paragraph{(1)} Within your Github repository, {\tt Examples/func\_params.cpp},
+we abstract a {\tt lower\_bound} to take a \emph{comparator
+function object} rather than always rely on {\tt operator<}. 
+In fact, it's possible to define an interface to {\tt lower\_bound} that takes
+\emph{only} a function object, rather than a value to search for and a
+comparator!
+Write out a complete doxygen specification comment for this {\tt
+  lower\_bound}. The implementation is not required. Pay special attention to
+the signature and requirements of the function object.
+
+
+\paragraph{(2)} Why might the C++ standard library have implemented the version with item and comparator, rather than the version with only a predicate?
+
+
+\paragraph{(3)} Implement your {\tt lower\_bound} from (0) with your {\tt lower\_bound} from (1).
+
+\end{document}
